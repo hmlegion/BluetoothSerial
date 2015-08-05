@@ -421,6 +421,28 @@ public class BluetoothSerialService {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
+        /*
+        * Convert byte[] to hex string
+        * @param src byte[] data
+        * @return hex string
+        */
+        private String bytesToHexString(byte[] src){
+            StringBuilder stringBuilder = new StringBuilder("");
+            if (src == null || src.length <= 0) {
+                return null;
+            }
+            for (int i = 0; i < src.length; i++) {
+                int v = src[i] & 0xFF;
+                String hv = Integer.toHexString(v).toUpperCase();
+                if (hv.length() < 2) {
+                    stringBuilder.append(0);
+                }
+                hv+=" ";
+                stringBuilder.append(hv);
+            }
+            return stringBuilder.toString();
+        }
+
         public ConnectedThread(BluetoothSocket socket, String socketType) {
             Log.d(TAG, "create ConnectedThread: " + socketType);
             mmSocket = socket;
@@ -451,14 +473,16 @@ public class BluetoothSerialService {
                     bytes = mmInStream.read(buffer);
                     String data = new String(buffer, 0, bytes);
 
-                    // Send the new data String to the UI Activity
-                    mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, data).sendToTarget();
-
                     // Send the raw bytestream to the UI Activity.
                     // We make a copy because the full array can have extra data at the end
                     // when / if we read less than its size.
                     if (bytes > 0) {
                         byte[] rawdata = Arrays.copyOf(buffer, bytes);
+
+                        String hexStr= bytesToHexString(rawdata);
+                        // Send the new data String to the UI Activity
+                        mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, hexStr).sendToTarget();
+
                         mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ_RAW, rawdata).sendToTarget();
                     }
 
