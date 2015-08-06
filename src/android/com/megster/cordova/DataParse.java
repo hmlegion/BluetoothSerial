@@ -158,7 +158,7 @@ public class DataParse implements Runnable
 				skipCounter++;
 				if(skipCounter == 1)
 				{
-					sendStr="ECGWave "+ String.valueOf(0xff&pkgData[4]);
+					sendStr="ECGWave "+ String.valueOf(0xff&pkgData[4])+"!";
 					mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, sendStr).sendToTarget();
 //					MainActivity.mECGWaveDraw.add(pkgData[4]&0xff);
 					skipCounter = 0;
@@ -166,7 +166,7 @@ public class DataParse implements Runnable
 				
 				break;
 			case PKG_SPO2_WAVE:
-				sendStr="SpO2Wave "+ String.valueOf(0xff&pkgData[4]);
+				sendStr="SpO2Wave "+ String.valueOf(0xff&pkgData[4])+"!";
 				mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, sendStr).sendToTarget();
 
 //					MainActivity.mSpO2WaveDraw.add(pkgData[4]&0xff);
@@ -175,23 +175,24 @@ public class DataParse implements Runnable
 //            		time = System.currentTimeMillis();
 				break;
 			case PKG_ECG_PARAM:
-				sendStr="ECG "+ String.valueOf(0xff&pkgData[6])+" "+ String.valueOf(0xff&pkgData[5]);
+				sendStr="ECG "+ String.valueOf(0xff&pkgData[6])+" "+ String.valueOf(0xff&pkgData[5])+"!";
 				mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, sendStr).sendToTarget();
 //				mHandler.obtainMessage(CONST.MESSAGE_ECG_PARAMS, 0xff&pkgData[6], 0xff&pkgData[5]).sendToTarget();
 				//Log.i(TAG, "pkg_ecg_param");
 				break;
 			case PKG_NIBP:
 				//Log.i(TAG, "pkg_nibp");
-				sendStr="NIBP "+ String.valueOf(0xff&pkgData[6])+" "+ String.valueOf(0xff&pkgData[8]);
+				sendStr="NIBP "+ String.valueOf(0xff&pkgData[6])+" "+ String.valueOf(0xff&pkgData[8])+"!";
+				mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, sendStr).sendToTarget();
 //				mHandler.obtainMessage(CONST.MESSAGE_NIBP_PARAMS, 0xff&pkgData[6], 0xff&pkgData[8]).sendToTarget();
 				break;
 		    case PKG_SPO2:
-				sendStr="SPO2 "+ String.valueOf(0xff&pkgData[5])+" "+ String.valueOf(0xff&pkgData[6]);
+				sendStr="SPO2 "+ String.valueOf(0xff&pkgData[5])+" "+ String.valueOf(0xff&pkgData[6])+"!";
 				mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, sendStr).sendToTarget();
 //			    mHandler.obtainMessage(CONST.MESSAGE_SPO2_PARAM, 0xff&pkgData[5], 0xff&pkgData[6]).sendToTarget();
 			    break;
 		    case PKG_TEMP:
-				sendStr="TEMP "+ String.valueOf(0xff&pkgData[5])+" "+ String.valueOf(0xff&pkgData[6]);
+				sendStr="TEMP "+ String.valueOf(0xff&pkgData[5])+" "+ String.valueOf(0xff&pkgData[6])+"!";
 				mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, sendStr).sendToTarget();
 //			    mHandler.obtainMessage(CONST.MESSAGE_TEMP_PARAMS, 0xff&pkgData[5], 0xff&pkgData[6]).sendToTarget();
 			    break;
