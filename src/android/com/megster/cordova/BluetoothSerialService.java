@@ -420,6 +420,7 @@ public class BluetoothSerialService {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+        private DataParse mDataParse;
 
         /*
         * Convert byte[] to hex string
@@ -463,28 +464,32 @@ public class BluetoothSerialService {
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
-            byte[] buffer = new byte[1024];
+//            byte[] buffer = new byte[1024];
             int bytes;
+            mDataParse = new DataParse(mHandler);
 
             // Keep listening to the InputStream while connected
             while (true) {
                 try {
-                    // Read from the InputStream
+//                    // Read from the InputStream
+//                    bytes = mmInStream.read(buffer);
+//                    String data = new String(buffer, 0, bytes);
+//
+//                    // Send the raw bytestream to the UI Activity.
+//                    // We make a copy because the full array can have extra data at the end
+//                    // when / if we read less than its size.
+//                    if (bytes > 0) {
+//                        byte[] rawdata = Arrays.copyOf(buffer, bytes);
+//
+//                        String hexStr= bytesToHexString(rawdata);
+//                        // Send the new data String to the UI Activity
+//                        mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, hexStr).sendToTarget();
+//
+//                        mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ_RAW, rawdata).sendToTarget();
+//                    }
+                    byte[] buffer = new byte[256];
                     bytes = mmInStream.read(buffer);
-                    String data = new String(buffer, 0, bytes);
-
-                    // Send the raw bytestream to the UI Activity.
-                    // We make a copy because the full array can have extra data at the end
-                    // when / if we read less than its size.
-                    if (bytes > 0) {
-                        byte[] rawdata = Arrays.copyOf(buffer, bytes);
-
-                        String hexStr= bytesToHexString(rawdata);
-                        // Send the new data String to the UI Activity
-                        mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, hexStr).sendToTarget();
-
-                        mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ_RAW, rawdata).sendToTarget();
-                    }
+                    mDataParse.Add(buffer, bytes);
 
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
